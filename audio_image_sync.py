@@ -1,10 +1,11 @@
-import os
-import shutil
-import random
 import argparse
+import os
+import random
+import shutil
 from glob import glob
-from pydub.utils import mediainfo
+
 from PIL import Image
+from pydub.utils import mediainfo
 
 # Standard video size for YouTube (HD)
 TARGET_WIDTH = 1280
@@ -12,7 +13,7 @@ TARGET_HEIGHT = 720
 
 
 def find_audio_file(folder):
-    mp3_files = glob(os.path.join(folder, '*.mp3'))
+    mp3_files = glob(os.path.join(folder, "*.mp3"))
     if mp3_files:
         return mp3_files[0]
     else:
@@ -24,18 +25,20 @@ def find_image_files(folder, patterns):
     all_images = []
     for pattern in patterns:
         all_images.extend(glob(os.path.join(folder, pattern)))
-    
+
     # Sort all images together
     all_images = sorted(all_images)
-    
+
     if not all_images:
-        raise FileNotFoundError(f"No images found matching patterns {patterns} in the folder.")
+        raise FileNotFoundError(
+            f"No images found matching patterns {patterns} in the folder."
+        )
     return all_images
 
 
 def get_audio_duration(audio_file):
     audio_info = mediainfo(audio_file)
-    return float(audio_info['duration'])
+    return float(audio_info["duration"])
 
 
 def resize_and_save(image_path, output_path, size=(TARGET_WIDTH, TARGET_HEIGHT)):
@@ -51,7 +54,7 @@ def duplicate_images(audio_file, image_patterns, output_folder, target_folder):
     if len(image_files) == 0:
         raise ValueError("No images found to duplicate.")
 
-    temp_dir = os.path.join(target_folder, 'tmp_' + str(random.randint(100000, 999999)))
+    temp_dir = os.path.join(target_folder, "tmp_" + str(random.randint(100000, 999999)))
     os.makedirs(temp_dir)
 
     audio_duration = get_audio_duration(audio_file)
@@ -82,27 +85,44 @@ def create_video(temp_dir, audio_file, output_file):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Sync resized images with audio duration and create a YouTube-ready video.")
-    parser.add_argument('folder', type=str, help="Folder containing the audio and images.")
-    parser.add_argument('--image_pattern', type=str, default='*.webp,*.png', 
-                        help="Comma-separated patterns to match image files (default: *.webp,*.png).")
-    parser.add_argument('--output_folder', type=str, default='./', help="Folder to save the output video.")
-    
+    parser = argparse.ArgumentParser(
+        description="Sync resized images with audio duration and create a YouTube-ready video."
+    )
+    parser.add_argument(
+        "folder", type=str, help="Folder containing the audio and images."
+    )
+    parser.add_argument(
+        "--image_pattern",
+        type=str,
+        default="*.webp,*.png",
+        help="Comma-separated patterns to match image files (default: *.webp,*.png).",
+    )
+    parser.add_argument(
+        "--output_folder",
+        type=str,
+        default="./",
+        help="Folder to save the output video.",
+    )
+
     args = parser.parse_args()
     folder = args.folder
     audio_file = find_audio_file(folder)
     print(f"Using audio file: {audio_file}")
 
     # Split the image pattern into a list of patterns
-    image_patterns = [pattern.strip() for pattern in args.image_pattern.split(',')]
+    image_patterns = [pattern.strip() for pattern in args.image_pattern.split(",")]
     print(f"Looking for images with patterns: {image_patterns}")
 
     try:
-        temp_dir = duplicate_images(audio_file, image_patterns, args.output_folder, folder)
+        temp_dir = duplicate_images(
+            audio_file, image_patterns, args.output_folder, folder
+        )
         print(f"Temporary directory created at: {temp_dir}")
         print(f"Processing {len(find_image_files(folder, image_patterns))} images...")
 
-        output_file = os.path.join(args.output_folder, "output_video.mp4")
+        # Place output video in the parent of the provided folder
+        parent_folder = os.path.dirname(os.path.abspath(folder))
+        output_file = os.path.join(parent_folder, "output_video.mp4")
         create_video(temp_dir, audio_file, output_file)
         print(f"Video created: {output_file}")
 
@@ -112,7 +132,7 @@ def main():
     except Exception as e:
         print(f"An error occurred: {e}")
         # Clean up temp dir if it exists
-        if 'temp_dir' in locals() and os.path.exists(temp_dir):
+        if "temp_dir" in locals() and os.path.exists(temp_dir):
             shutil.rmtree(temp_dir)
             print(f"Cleaned up temporary directory {temp_dir} after error.")
 

@@ -13,8 +13,7 @@ TARGET_HEIGHT = 720
 
 
 def find_audio_file(folder):
-    mp3_files = glob(os.path.join(folder, "*.mp3"))
-    if mp3_files:
+    if mp3_files := glob(os.path.join(folder, "*.mp3")):
         return mp3_files[0]
     else:
         raise FileNotFoundError("No MP3 file found in the folder.")

@@ -60,6 +60,27 @@ Temporary directory ... has been removed.
 
 The resulting `output_video.mp4` will be in your specified output folder.
 
+## Workflow
+
+```mermaid
+flowchart TD
+    A[Start: User runs audio_image_sync.py] --> B[Parse arguments (folder, image_pattern, output_folder)]
+    B --> C[Find audio file (.mp3) in folder]
+    B --> D[Find image files (by pattern) in folder]
+    C --> E[Get audio duration]
+    D --> F[Resize and duplicate images to match audio duration]
+    E --> F
+    F --> G[Store resized images in temp directory]
+    G --> H[Call ffmpeg to create video from images and audio]
+    H --> I[Save output_video.mp4 in parent of input folder]
+    I --> J[Remove temporary directory]
+    J --> K[Done]
+```
+
 ## License
 
 MIT License. See [LICENSE](LICENSE).
+
+# Understanding Screenplay
+
+[StudioBinder](https://www.studiobinder.com/blog/animation-scripts/)

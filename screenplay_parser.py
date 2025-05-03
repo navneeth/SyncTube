@@ -192,7 +192,7 @@ def print_script_stats(parsed_script):
         parsed_script (list): The list of scenes returned by parse_script_into_scenes.
     """
     num_scenes = len(parsed_script) - 1  # Exclude the metadata dictionary
-    print(f"--- Script Statistics ---")
+    print("--- Script Statistics ---")
     print(f"Number of Scenes: {num_scenes}")
 
     if num_scenes > 0:

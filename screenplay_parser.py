@@ -222,9 +222,9 @@ def print_script_stats(parsed_script):
             music_count = sum(bool(element["type"] == "music_cue")
                           for element in scene["elements"])
 
-            super_count = sum(
-                1 for element in scene["elements"] if element["type"] == "super"
-            )
+            super_count = sum(bool(element["type"] == "super")
+                          for element in scene["elements"])
+
             print(f"    - Dialogue Lines: {dialogue_count}")
             print(f"    - Action Lines: {action_count}")
             print(f"    - Shots: {shot_count}")

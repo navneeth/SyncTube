@@ -204,9 +204,9 @@ def print_script_stats(parsed_script):
         for scene in parsed_script[1:]:
             print(f"\nScene {scene['scene_number']}: {scene['heading']}")
             print(f"  Number of Elements: {len(scene['elements'])}")
-            dialogue_count = sum(
-                1 for element in scene["elements"] if element["type"] == "dialogue"
-            )
+            dialogue_count = sum(bool(element["type"] == "dialogue")
+                             for element in scene["elements"])
+
             action_count = sum(
                 1 for element in scene["elements"] if element["type"] == "action"
             )

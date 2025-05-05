@@ -110,13 +110,18 @@ def parse_script_into_scenes(script_text):
                         }
                     )
                 elif "End card" in element_content:
-                    current_scene["elements"].append(
-                        {
-                            "type": "graphic",
-                            "subtype": "end_card",
-                            "description": element_content,
-                        }
-                    )
+                    if current_scene is not None:
+                        current_scene["elements"].append(
+                            {
+                                "type": "graphic",
+                                "subtype": "end_card",
+                                "description": element_content,
+                            }
+                        )
+                    else:
+                        # No current scene is set; choose to either log a warning, create a default scene, or skip
+                        # For now, we'll simply skip appending as there is no valid scene.
+                        pass
 
             elif line.startswith("Narrator"):
                 tone = "normal"

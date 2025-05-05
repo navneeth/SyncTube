@@ -207,9 +207,9 @@ def print_script_stats(parsed_script):
             dialogue_count = sum(bool(element["type"] == "dialogue")
                              for element in scene["elements"])
 
-            action_count = sum(
-                1 for element in scene["elements"] if element["type"] == "action"
-            )
+            action_count = sum(bool(element["type"] == "action")
+                           for element in scene["elements"])
+
             shot_count = sum(
                 1 for element in scene["elements"] if element["type"] == "shot"
             )

@@ -162,11 +162,11 @@ def parse_script_into_scenes(script_text):
                 quotes = re.findall(r'"([^"]*)"', line)
                 if quotes:
                     dialogue_text = quotes[0]
-                    speaker = "CHARACTER"
-                    for char_name in ["Harmony", "Melody", "Star", "Bubbles"]:
-                        if char_name in line:
-                            speaker = char_name.upper()
-                            break
+                    match = re.match(r'\s*(Harmony|Melody|Star|Bubbles)\s*:', line)
+                    if match:
+                        speaker = match.group(1).upper()
+                    else:
+                        speaker = "CHARACTER"
                     current_scene["elements"].append(
                         {
                             "type": "dialogue",

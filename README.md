@@ -12,12 +12,59 @@ SyncTube takes a folder containing an audio file (`.mp3`) and a set of images (`
 - [pydub](https://github.com/jiaaro/pydub)
 - [Pillow](https://python-pillow.org/)
 - [ffmpeg](https://ffmpeg.org/) (must be installed and available in your system PATH)
+- [Poetry](https://python-poetry.org/) (for dependency management)
 
-Install Python dependencies:
+## Configuration and Installation
 
-```sh
-pip install pydub Pillow
-```
+1.  **Install Poetry:**
+
+    If you don't have Poetry installed, you can install it using the official installer:
+
+    ```bash
+    curl -sSL https://install.python-poetry.org | python3 -
+    ```
+
+    Make sure to add Poetry to your system's PATH.
+
+2.  **Clone the Repository:**
+
+    Clone the SyncTube repository to your local machine:
+
+    ```bash
+    git clone <repository_url>
+    cd SyncTube
+    ```
+
+3.  **Install Dependencies:**
+
+    Use Poetry to install the required dependencies:
+
+    ```bash
+    poetry install
+    ```
+
+    This command reads the `pyproject.toml` file and installs the necessary packages, including `pydub` and `Pillow`.
+
+4.  **FFmpeg Installation:**
+
+    SyncTube relies on FFmpeg for video encoding. Ensure that FFmpeg is installed on your system and accessible in your system's PATH.
+
+    -   **macOS (using Homebrew):**
+
+        ```bash
+        brew install ffmpeg
+        ```
+
+    -   **Debian/Ubuntu:**
+
+        ```bash
+        sudo apt update
+        sudo apt install ffmpeg
+        ```
+
+    -   **Windows:**
+
+        Download FFmpeg from the official website (<https://ffmpeg.org/download.html>).  Extract the downloaded archive and add the `bin` directory to your system's PATH environment variable.
 
 ## Usage
 

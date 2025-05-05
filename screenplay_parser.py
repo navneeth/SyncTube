@@ -38,6 +38,13 @@ def parse_script_into_scenes(script_text):
     if series_match:
         script_metadata["metadata"]["series"] = series_match.group(1)
 
+    def extract_bracketed_content(line: str) -> str:
+        """
+        Extracts the content inside square brackets from the given line.
+        For example: "[Title card: Sample]" -> "Title card: Sample"
+        """
+        return line.strip("[]")
+
     i = 0
     while i < len(lines):
         line = lines[i]
@@ -57,7 +64,7 @@ def parse_script_into_scenes(script_text):
         # Production elements and dialogue within a scene
         elif current_scene is not None:
             if line.startswith("[") and "]" in line:
-                element_content = line.strip("[]")
+                element_content = extract_bracketed_content(line)
 
                 if "Title card:" in element_content:
                     current_scene["elements"].append(
@@ -162,7 +169,7 @@ def parse_script_into_scenes(script_text):
                 quotes = re.findall(r'"([^"]*)"', line)
                 if quotes:
                     dialogue_text = quotes[0]
-                    match = re.match(r'\s*(Harmony|Melody|Star|Bubbles)\s*:', line)
+                    match = re.match(r"\s*(Harmony|Melody|Star|Bubbles)\s*:", line)
                     if match:
                         speaker = match.group(1).upper()
                     else:
@@ -204,26 +211,32 @@ def print_script_stats(parsed_script):
         for scene in parsed_script[1:]:
             print(f"\nScene {scene['scene_number']}: {scene['heading']}")
             print(f"  Number of Elements: {len(scene['elements'])}")
-            dialogue_count = sum(bool(element["type"] == "dialogue")
-                             for element in scene["elements"])
+            dialogue_count = sum(
+                bool(element["type"] == "dialogue") for element in scene["elements"]
+            )
 
-            action_count = sum(bool(element["type"] == "action")
-                           for element in scene["elements"])
+            action_count = sum(
+                bool(element["type"] == "action") for element in scene["elements"]
+            )
 
             shot_count = sum(
                 1 for element in scene["elements"] if element["type"] == "shot"
             )
-            sound_count = sum(bool(element["type"] == "sound")
-                          for element in scene["elements"])
+            sound_count = sum(
+                bool(element["type"] == "sound") for element in scene["elements"]
+            )
 
-            graphic_count = sum(bool(element["type"] == "graphic")
-                            for element in scene["elements"])
+            graphic_count = sum(
+                bool(element["type"] == "graphic") for element in scene["elements"]
+            )
 
-            music_count = sum(bool(element["type"] == "music_cue")
-                          for element in scene["elements"])
+            music_count = sum(
+                bool(element["type"] == "music_cue") for element in scene["elements"]
+            )
 
-            super_count = sum(bool(element["type"] == "super")
-                          for element in scene["elements"])
+            super_count = sum(
+                bool(element["type"] == "super") for element in scene["elements"]
+            )
 
             print(f"    - Dialogue Lines: {dialogue_count}")
             print(f"    - Action Lines: {action_count}")

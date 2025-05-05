@@ -219,9 +219,9 @@ def print_script_stats(parsed_script):
             graphic_count = sum(bool(element["type"] == "graphic")
                             for element in scene["elements"])
 
-            music_count = sum(
-                1 for element in scene["elements"] if element["type"] == "music_cue"
-            )
+            music_count = sum(bool(element["type"] == "music_cue")
+                          for element in scene["elements"])
+
             super_count = sum(
                 1 for element in scene["elements"] if element["type"] == "super"
             )

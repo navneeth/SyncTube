@@ -213,9 +213,9 @@ def print_script_stats(parsed_script):
             shot_count = sum(
                 1 for element in scene["elements"] if element["type"] == "shot"
             )
-            sound_count = sum(
-                1 for element in scene["elements"] if element["type"] == "sound"
-            )
+            sound_count = sum(bool(element["type"] == "sound")
+                          for element in scene["elements"])
+
             graphic_count = sum(
                 1 for element in scene["elements"] if element["type"] == "graphic"
             )

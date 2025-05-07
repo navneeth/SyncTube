@@ -4,62 +4,130 @@ Generate Video from a Scripted Storyline
 
 ## Overview
 
-SyncTube takes a folder containing an audio file (`.mp3`) and a set of images (`.webp`, `.png`, etc.), resizes the images, and generates a YouTube-ready video where each image is shown for approximately one second, synchronized to the audio duration.
+SyncTube is a toolkit for generating YouTube videos from scripts. It includes:
+- Script parsing and processing
+- Image generation from visual descriptions
+- Audio-image synchronization
+- Final video compilation
 
 ## Requirements
 
-- Python 3.x
-- [pydub](https://github.com/jiaaro/pydub)
-- [Pillow](https://python-pillow.org/)
+- Python 3.9+
 - [ffmpeg](https://ffmpeg.org/) (must be installed and available in your system PATH)
+- A Reve AI API key for image generation
 
-Install Python dependencies:
+## Installation
 
-```sh
-pip install pydub Pillow
+### Option 1: Using pip
+
+1. Clone and setup environment:
+```bash
+git clone <repository_url>
+cd SyncTube
+python -m venv .venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+pip install -r requirements.txt
 ```
+
+### Option 2: Using uv (Faster Installation)
+
+1. Clone and setup environment:
+```bash
+git clone <repository_url>
+cd SyncTube
+python -m venv .venv
+source .venv/bin/activate
+
+# Install uv
+pip install uv
+
+# Install dependencies using uv
+uv pip install -r requirements.txt
+```
+
+2. Create a `.env` file with your Reve AI API key:
+```bash
+echo "REVE_API_KEY=your_api_key_here" > .env
+```
+
+**Note**: `uv` is recommended for faster dependency resolution and installation.
 
 ## Usage
 
-```sh
+### 1. Parse Script
+
+First, parse your screenplay into separate files for audio and visuals:
+
+```bash
+python parse_script.py
+```
+
+This will:
+- Read the input script specified in `config.yaml`
+- Generate `script_audio.txt` and `script_imagegen.txt` in the same directory
+- Extract visual descriptions and dialogue lines
+
+### 2. Generate Images
+
+Generate images from the visual descriptions:
+
+```bash
+python generate_images.py
+```
+
+This will:
+- Read visual prompts from `script_imagegen.txt`
+- Use Reve AI to generate images for each visual description
+- Save images in a `generated_images` directory
+
+### 3. Create Final Video
+
+Sync the images with audio:
+
+```bash
 python audio_image_sync.py <folder> [--image_pattern PATTERNS] [--output_folder OUTPUT]
 ```
 
-- `<folder>`: Path to the folder containing the `.mp3` audio file and images.
-- `--image_pattern`: (Optional) Comma-separated glob patterns for images (default: `*.webp,*.png`).
-- `--output_folder`: (Optional) Where to save the output video (default: `./`).
+## Configuration
 
-### Example
-
-Suppose your folder structure is:
-
-```
-SharkStory/
-  ├── narration.mp3
-  ├── img1.webp
-  ├── img2.png
-  └── img3.webp
+Create a `config.yaml` file:
+```yaml
+input_script: ~/path/to/your/script.txt
 ```
 
-Run:
-
-```sh
-python audio_image_sync.py ~/YouTube-Channel-WaitForIt/SharkStory
-```
-
-Sample output:
+## File Structure
 
 ```
-Using audio file: /Users/navneeth/YouTube-Channel-WaitForIt/SharkStory/narration.mp3
-Looking for images with patterns: ['*.webp', '*.png']
-Temporary directory created at: /Users/navneeth/YouTube-Channel-WaitForIt/SharkStory/tmp_573668
-Processing 41 images...
-Video created: ./output_video.mp4
-Temporary directory ... has been removed.
+your_project/
+  ├── script.txt              # Original screenplay
+  ├── script_audio.txt        # Extracted dialogue/narration
+  ├── script_imagegen.txt     # Extracted visual descriptions
+  ├── generated_images/       # AI-generated images
+  │   ├── 001.png
+  │   ├── 002.png
+  │   └── ...
+  └── output_video.mp4       # Final compiled video
 ```
 
-The resulting `output_video.mp4` will be in your specified output folder.
+## Workflow
+
+```mermaid
+flowchart TD
+    A[script.txt] --> B[parse_script.py]
+    B --> C[script_audio.txt]
+    B --> D[script_imagegen.txt]
+    D --> E[generate_images.py]
+    E --> F[generated_images/*.png]
+    C --> G[audio_image_sync.py]
+    F --> G
+    G --> H[output_video.mp4]
+```
 
 ## License
 
 MIT License. See [LICENSE](LICENSE).
+
+## References
+
+- [StudioBinder - Animation Scripts](https://www.studiobinder.com/blog/animation-scripts/)
+- [Reve AI Documentation](https://reveai.com/docs)

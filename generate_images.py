@@ -80,8 +80,7 @@ class ReveAIGenerator(ImageGenerator):
         try:
             response = requests.post(self.api_url, headers=self.headers, json=data)
             response.raise_for_status()
-            image_url = response.json().get("output")
-            if image_url:
+            if image_url := response.json().get("output"):
                 img_resp = requests.get(image_url)
                 if img_resp.status_code == 200:
                     return img_resp.content

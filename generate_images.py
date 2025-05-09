@@ -259,8 +259,7 @@ def save_images(generator, prompts, output_dir: Path, size: str):
             continue
 
         logger.info(f"[INFO] Generating image {idx:03d}: {prompt}")
-        img_data = generator.generate(prompt, size)
-        if img_data:
+        if img_data := generator.generate(prompt, size):
             with open(img_path, "wb") as f:
                 f.write(img_data)
             logger.info(f"[SUCCESS] Saved: {img_path}")

@@ -1,0 +1,3 @@
+input_script: ~/YouTube-Channel-WaitForIt/HumpbackStory/script.txt
+image_api: "local"  # Use local Stable Diffusion
+image_size: "512x512"  # Optimal for SD v1.4
